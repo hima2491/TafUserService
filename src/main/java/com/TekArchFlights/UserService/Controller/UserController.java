@@ -53,6 +53,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        System.out.println("Deleted booking successfully for ID: " + id);
         return ResponseEntity.noContent().build(); // 204 No Content after deletion
     }
 }
