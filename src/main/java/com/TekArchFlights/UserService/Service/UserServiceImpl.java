@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${datastore.service.users.url}")
-    private String datastoreServiceUsersUrl;
+    @Value("${datastore.service.url}")
+    private String datastoreServiceUrl;
 
     @Autowired
     public UserServiceImpl(RestTemplate restTemplate) {
@@ -32,10 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
-        log.info("Fetching all users from datastore service at {}", datastoreServiceUsersUrl);
+        log.info("Fetching all users from datastore service at {}", datastoreServiceUrl);
         try {
             ResponseEntity<List<UserDTO>> response = restTemplate.exchange(
-                    datastoreServiceUsersUrl,
+                    datastoreServiceUrl,
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<UserDTO>>() {}
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDTO> getUserById(Long id) {
-        String url =  datastoreServiceUsersUrl + "/" + id;
+        String url =  datastoreServiceUrl + "/" + id;
         log.info("Fetching user with ID {} from datastore service at {}", id, url);
         try {
             ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserDTO userDTO) {
         log.info("Creating a new user in datastore service");
         try {
-            ResponseEntity<UserDTO> response = restTemplate.postForEntity( datastoreServiceUsersUrl, userDTO, UserDTO.class);
+            ResponseEntity<UserDTO> response = restTemplate.postForEntity( datastoreServiceUrl, userDTO, UserDTO.class);
             return response.getBody();
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             log.error("Error creating user: {}", ex.getMessage());
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUser(Long id, UserDTO userDTO) {
-        String url =  datastoreServiceUsersUrl+ "/" + id;
+        String url =  datastoreServiceUrl+ "/" + id;
         log.info("Updating user with ID {} at {}", id, url);
         try {
             restTemplate.put(url, userDTO);
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        String url =  datastoreServiceUsersUrl + "/" + id;
+        String url =  datastoreServiceUrl+ "/" + id;
         log.info("Deleting user with ID {} at {}", id, url);
         try {
             restTemplate.delete(url);
